@@ -556,3 +556,143 @@ mysql> select * from payroll;
 |    13 |    21500 |       1700 |      19800 |  600 |  19200 | 2020-06-11 |
 +-------+----------+------------+------------+------+--------+------------+
 3 rows in set (0.00 sec)
+
+// UC12 -  Ensuring that all retrieve queries done especially in UC 4, UC 5 and UC 7 are working with new table structure.
+// Retrieving all the entries from the company table
+mysql> select * from company;
++--------+-----------+
+| CompId | CompName  |
++--------+-----------+
+|    101 | Capgemini |
++--------+-----------+
+1 row in set (0.07 sec)
+// Retrieving all the entries from the employee table
+
+mysql> select * from employee;
++-------+---------+--------+------------+----------------------------------------+--------+
+| EmpId | EmpName | Gender | PhoneNo    | Address                                | CompId |
++-------+---------+--------+------------+----------------------------------------+--------+
+|    11 | Bill    | M      | 8923547965 | pushvatika, Surat - 321765, Guj.       |    101 |
+|    12 | Teressa | F      | 9876556789 | Garden city, Vadodara- 389008,GujP.    |    101 |
+|    13 | Charlie | M      | 8776597979 | AFS Colony, Vadodara - 350117, Gujarat |    101 |
++-------+---------+--------+------------+----------------------------------------+--------+
+3 rows in set (0.00 sec)
+
+// Retrieving all the entries from the employee_department table
+
+mysql> select * from employee_department;
++-------+-----------+
+| EmpId | DepName   |
++-------+-----------+
+|    12 | Sales     |
+|    12 | Marketing |
++-------+-----------+
+2 rows in set (0.00 sec)
+// Retrieving all the entries from the department table
+
+mysql> select * from department;
++-------+-----------+
+| DepId | DepName   |
++-------+-----------+
+|  1001 | Marketing |
+|  1002 | Sales     |
+|  1003 | IT        |
+|  1004 | HR        |
++-------+-----------+
+4 rows in set (0.04 sec)
+// Retrieving all the entries from the payroll table
+
+mysql> select * from payroll;
++-------+----------+------------+------------+------+--------+------------+
+| EmpId | BasicPay | Deductions | TaxablePay | Tax  | NetPay | StartDate  |
++-------+----------+------------+------------+------+--------+------------+
+|    11 |    20000 |       1500 |      18500 |  500 |  18000 | 2018-12-03 |
+|    12 |    22000 |       2000 |      20000 | 1000 |  19000 | 2019-04-05 |
+|    13 |    21500 |       1700 |      19800 |  600 |  19200 | 2020-06-11 |
++-------+----------+------------+------------+------+--------+------------+
+3 rows in set (0.00 sec)
+// Retrieving the salary of 'Bill'
+
+mysql>  select NetPay from payroll
+    ->  where empid = (select empid from employee where empname ='Bill');
++--------+
+| NetPay |
++--------+
+|  18000 |
++--------+
+1 row in set (0.12 sec)
+
+// Retrieving salary data for all employees who have joined from 1st Jan, 2019
+
+mysql> select EmpId, EmpName, NetPay, StartDate from employee join
+    -> (select * from payroll where  startdate between cast('2019-01-01' as date) and date(now())) as p
+    -> using(empid);
++-------+---------+--------+------------+
+| EmpId | EmpName | NetPay | StartDate  |
++-------+---------+--------+------------+
+|    12 | Teressa |  19000 | 2019-04-05 |
+|    13 | Charlie |  19200 | 2020-06-11 |
++-------+---------+--------+------------+
+2 rows in set (0.00 sec)
+
+// Retrieving maximum salary of each gender
+mysql> select gender, max(netpay) from
+    -> (select gender, netpay from employee e, payroll p where e.empid=p.empid) as d
+    -> group by gender;
++--------+-------------+
+| gender | max(netpay) |
++--------+-------------+
+| M      |       19200 |
+| F      |       19000 |
++--------+-------------+
+2 rows in set (0.03 sec)
+
+// Retrieving minimum salary of each gender 
+
+mysql>  select gender, min(netpay) from
+    -> (select gender, netpay from employee e, payroll p where e.empid=p.empid) as d
+    -> group by gender;
++--------+-------------+
+| gender | min(netpay) |
++--------+-------------+
+| M      |       18000 |
+| F      |       19000 |
++--------+-------------+
+2 rows in set (0.00 sec)
+
+// Retrieving sum of all salaries of each gender
+
+mysql>  select gender, sum(netpay) from
+    -> (select gender, netpay from employee e, payroll p where e.empid=p.empid) as d
+    -> group by gender;
++--------+-------------+
+| gender | sum(netpay) |
++--------+-------------+
+| M      |       37200 |
+| F      |       19000 |
++--------+-------------+
+2 rows in set (0.07 sec)
+
+// Retrieving the count of all employess of each gender
+
+mysql>  SELECT GENDER,COUNT(EMPID) FROM EMPLOYEE GROUP BY GENDER;
++--------+--------------+
+| GENDER | COUNT(EMPID) |
++--------+--------------+
+| M      |            2 |
+| F      |            1 |
++--------+--------------+
+2 rows in set (0.00 sec)
+
+// Retrieving average of all salaries of each gender
+
+mysql>  select gender, avg(netpay) from
+    -> (select gender, netpay from employee e, payroll p where e.empid=p.empid) as d
+    -> group by gender;
++--------+-------------+
+| gender | avg(netpay) |
++--------+-------------+
+| M      |       18600 |
+| F      |       19000 |
++--------+-------------+
+2 rows in set (0.00 sec)
