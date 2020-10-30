@@ -337,3 +337,222 @@ mysql> select * from employee_payroll where name = 'Teressa';
 |  4 | Teressa | NULL         | TBD     | Marketing  | NULL   |   3000000 |    1000000 |     2000000 | 500000 | 1500000 | 2018-01-03 |
 +----+---------+--------------+---------+------------+--------+-----------+------------+-------------+--------+---------+------------+
 2 rows in set (0.09 sec)
+
+// UC11 - Implementing the ER Diagram into Payroll Service DB.
+
+// Displaying all the tables in payroll_service database
+mysql> show tables;
++---------------------------+
+| Tables_in_payroll_service |
++---------------------------+
+| employee_payroll          |
++---------------------------+
+1 row in set (1.08 sec)
+
+// Creating a company table
+
+mysql> create table company(
+    ->  CompId int unsigned primary key,
+    -> CompName varchar(100) not null);
+Query OK, 0 rows affected (2.88 sec)
+
+// Creating a employee table
+mysql> create table employee(
+    -> EmpId int unsigned primary key,
+    -> EmpName varchar(150) not null,
+    -> Gender char(1),
+    -> PhoneNo varchar(20),
+    -> Address varchar(250),
+    -> CompId int unsigned not null);
+Query OK, 0 rows affected (0.88 sec)
+
+// Creating a employee_department table
+mysql> create table employee_department(
+    -> EmpId int unsigned not null,
+    -> DepID int unsigned not null);
+Query OK, 0 rows affected (1.82 sec)
+
+// Creating a department table 
+mysql> create table department (
+    -> DepId int unsigned primary key,
+    -> DepName varchar(100) not null);
+Query OK, 0 rows affected (1.50 sec)
+
+// Creating a payroll table
+mysql> create table payroll(
+    -> EmpId int unsigned not null,
+    -> BasicPay double not null,
+    ->  Deductions double not null,
+    -> TaxablePay double not null,
+    -> Tax double not null,
+    -> NetPay double not null,
+    -> StartDate date not null,
+    ->  foreign key(EmpId) references employee(EmpId));
+Query OK, 0 rows affected (2.73 sec)
+
+// Displaying all the tables in payroll_service database
+
+mysql> show tables;
++---------------------------+
+| Tables_in_payroll_service |
++---------------------------+
+| company                   |
+| department                |
+| employee                  |
+| employee_department       |
+| employee_payroll          |
+| payroll                   |
++---------------------------+
+6 rows in set (0.07 sec)
+// Describing the structure of the company table
+mysql> desc company;
++----------+--------------+------+-----+---------+-------+
+| Field    | Type         | Null | Key | Default | Extra |
++----------+--------------+------+-----+---------+-------+
+| CompId   | int unsigned | NO   | PRI | NULL    |       |
+| CompName | varchar(100) | NO   |     | NULL    |       |
++----------+--------------+------+-----+---------+-------+
+2 rows in set (0.04 sec)
+
+// Inserting data to the company table
+mysql> insert into company values
+    -> (101, "Capgemini");
+Query OK, 1 row affected (0.23 sec)
+
+// Retrieving all the entries from the company table
+mysql> select * from company;
++--------+-----------+
+| CompId | CompName  |
++--------+-----------+
+|    101 | Capgemini |
++--------+-----------+
+1 row in set (0.00 sec)
+
+// Describing the structure of the employee table
+mysql> desc employee;
++---------+--------------+------+-----+---------+-------+
+| Field   | Type         | Null | Key | Default | Extra |
++---------+--------------+------+-----+---------+-------+
+| EmpId   | int unsigned | NO   | PRI | NULL    |       |
+| EmpName | varchar(150) | NO   |     | NULL    |       |
+| Gender  | char(1)      | YES  |     | NULL    |       |
+| PhoneNo | varchar(20)  | YES  |     | NULL    |       |
+| Address | varchar(250) | YES  |     | NULL    |       |
+| CompId  | int unsigned | NO   |     | NULL    |       |
++---------+--------------+------+-----+---------+-------+
+6 rows in set (0.18 sec)
+
+// Inserting data to the employee table
+
+
+mysql> insert into employee values
+    -> (11,'Bill','M','8923547965','pushvatika, Surat - 321765, Guj.',101),
+    -> (12,'Teressa','F','9876556789','Garden city, Vadodara- 389008,GujP.',101),
+    -> (13,'Charlie','M','8776597979','AFS Colony, Vadodara - 350117, Gujarat',101);
+Query OK, 3 rows affected (0.38 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+// Retrieving all the entries from the employee table
+mysql> select * from employee;
++-------+---------+--------+------------+----------------------------------------+--------+
+| EmpId | EmpName | Gender | PhoneNo    | Address                                | CompId |
++-------+---------+--------+------------+----------------------------------------+--------+
+|    11 | Bill    | M      | 8923547965 | pushvatika, Surat - 321765, Guj.       |    101 |
+|    12 | Teressa | F      | 9876556789 | Garden city, Vadodara- 389008,GujP.    |    101 |
+|    13 | Charlie | M      | 8776597979 | AFS Colony, Vadodara - 350117, Gujarat |    101 |
++-------+---------+--------+------------+----------------------------------------+--------+
+3 rows in set (0.00 sec)
+
+// Describing the structure of the employee_department table
+mysql> desc employee_department;
++-------+--------------+------+-----+---------+-------+
+| Field | Type         | Null | Key | Default | Extra |
++-------+--------------+------+-----+---------+-------+
+| EmpId | int unsigned | NO   |     | NULL    |       |
+| DepID | int unsigned | NO   |     | NULL    |       |
++-------+--------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> insert into employee_department values
+    -> (12,'Sales'),
+    -> (12, 'Marketing');
+Query OK, 2 rows affected (0.89 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+// Retrieving all the entries from the employee_department table
+mysql> select * from employee_department;
++-------+-----------+
+| EmpId | DepName   |
++-------+-----------+
+|    12 | Sales     |
+|    12 | Marketing |
++-------+-----------+
+2 rows in set (0.00 sec)
+
+// Describing the structure of the department table
+mysql> desc department;
++---------+--------------+------+-----+---------+-------+
+| Field   | Type         | Null | Key | Default | Extra |
++---------+--------------+------+-----+---------+-------+
+| DepId   | int unsigned | NO   | PRI | NULL    |       |
+| DepName | varchar(100) | NO   |     | NULL    |       |
++---------+--------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+// Inserting data to the department table
+
+mysql> insert into department values
+    -> (1001, 'Marketing'),
+    -> (1002, 'Sales'),
+    -> (1003, 'IT'),
+    -> (1004, 'HR');
+Query OK, 4 rows affected (0.22 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+// Retrieving all the entries from the department table
+
+mysql> select * from department;
++-------+-----------+
+| DepId | DepName   |
++-------+-----------+
+|  1001 | Marketing |
+|  1002 | Sales     |
+|  1003 | IT        |
+|  1004 | HR        |
++-------+-----------+
+4 rows in set (0.00 sec)
+// Describing the structure of the payroll table
+
+mysql> desc PAYROLL;
++------------+--------------+------+-----+---------+-------+
+| Field      | Type         | Null | Key | Default | Extra |
++------------+--------------+------+-----+---------+-------+
+| EmpId      | int unsigned | NO   | MUL | NULL    |       |
+| BasicPay   | double       | NO   |     | NULL    |       |
+| Deductions | double       | NO   |     | NULL    |       |
+| TaxablePay | double       | NO   |     | NULL    |       |
+| Tax        | double       | NO   |     | NULL    |       |
+| NetPay     | double       | NO   |     | NULL    |       |
+| StartDate  | date         | NO   |     | NULL    |       |
++------------+--------------+------+-----+---------+-------+
+7 rows in set (0.17 sec)
+
+// Inserting data to the payroll table
+mysql> insert into payroll values
+    -> (11, 20000.00, 1500.00,18500.00,500.00,18000.00,'2018-12-03'),
+    -> (12, 22000.00, 2000.00,20000.00,1000.00,19000.00,'2019-04-05'),
+    -> (13, 21500.00, 1700.00,19800.00,600.00,19200.00,'2020-06-11');
+Query OK, 3 rows affected (0.43 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+// Retrieving all the entries from the payroll table
+
+mysql> select * from payroll;
++-------+----------+------------+------------+------+--------+------------+
+| EmpId | BasicPay | Deductions | TaxablePay | Tax  | NetPay | StartDate  |
++-------+----------+------------+------------+------+--------+------------+
+|    11 |    20000 |       1500 |      18500 |  500 |  18000 | 2018-12-03 |
+|    12 |    22000 |       2000 |      20000 | 1000 |  19000 | 2019-04-05 |
+|    13 |    21500 |       1700 |      19800 |  600 |  19200 | 2020-06-11 |
++-------+----------+------------+------------+------+--------+------------+
+3 rows in set (0.00 sec)
