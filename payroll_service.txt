@@ -90,3 +90,50 @@ mysql> Select * from employee_payroll where start between cast('2019-01-01' as d
 |  3 | Charlie | 3000000 | 2020-05-21 |
 +----+---------+---------+------------+
 2 rows in set (0.07 sec)
+
+// UC6 -  Adding Gender to Employee Payroll Table and Update the Rows to reflect the correct Employee Gender.
+// Adding gender as a column to the table
+mysql> alter table employee_payroll add gender char(1) after name;
+Query OK, 0 rows affected (4.44 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+// Retrieving all the data from the employee_payroll table
+mysql> select * from employee_payroll;
++----+---------+--------+---------+------------+
+| id | name    | gender | salary  | start      |
++----+---------+--------+---------+------------+
+|  1 | Bill    | NULL   | 1000000 | 2018-01-03 |
+|  2 | Teressa | NULL   | 2000000 | 2019-11-13 |
+|  3 | Charlie | NULL   | 3000000 | 2020-05-21 |
++----+---------+--------+---------+------------+
+3 rows in set (0.00 sec)
+// Updating the Rows to reflect Female as gender 
+mysql> update employee_payroll set gender='F' where name ='Teressa';
+Query OK, 1 row affected (0.21 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+// Retrieving all the data from the employee_payroll table
+
+mysql> select * from employee_payroll;
++----+---------+--------+---------+------------+
+| id | name    | gender | salary  | start      |
++----+---------+--------+---------+------------+
+|  1 | Bill    | NULL   | 1000000 | 2018-01-03 |
+|  2 | Teressa | F      | 2000000 | 2019-11-13 |
+|  3 | Charlie | NULL   | 3000000 | 2020-05-21 |
++----+---------+--------+---------+------------+
+3 rows in set (0.00 sec)
+
+// Updating the Rows to reflect Male as gender
+mysql> update employee_payroll set gender='M' where not  name ='Teressa';
+Query OK, 2 rows affected (0.10 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+// Retrieving all the data from the employee_payroll table
+mysql> select * from employee_payroll;
++----+---------+--------+---------+------------+
+| id | name    | gender | salary  | start      |
++----+---------+--------+---------+------------+
+|  1 | Bill    | M      | 1000000 | 2018-01-03 |
+|  2 | Teressa | F      | 2000000 | 2019-11-13 |
+|  3 | Charlie | M      | 3000000 | 2020-05-21 |
++----+---------+--------+---------+------------+
+3 rows in set (0.07 sec)
