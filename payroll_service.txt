@@ -68,3 +68,25 @@ mysql> select * from employee_payroll;
 |  3 | Charlie | 3000000 | 2020-05-21 |
 +----+---------+---------+------------+
 3 rows in set (0.06 sec)
+// UC5 -  Retrieving salary data for a particular employee as well as all employees who have joined in a particular data range from the payroll service database.
+
+// Retrieving salary data for Bill
+
+mysql> select salary from employee_payroll where name = 'BILL';
++---------+
+| salary  |
++---------+
+| 1000000 |
++---------+
+1 row in set (0.05 sec)
+
+// Retrieving salary data for all employees who have joined from 1st Jan, 2019
+
+mysql> Select * from employee_payroll where start between cast('2019-01-01' as date) and sysDate();
++----+---------+---------+------------+
+| id | name    | salary  | start      |
++----+---------+---------+------------+
+|  2 | Teressa | 2000000 | 2019-11-13 |
+|  3 | Charlie | 3000000 | 2020-05-21 |
++----+---------+---------+------------+
+2 rows in set (0.07 sec)
