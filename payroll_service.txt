@@ -189,3 +189,47 @@ mysql>  SELECT GENDER,AVG(SALARY) FROM employee_payroll GROUP BY gender;
 | F      |     2000000 |
 +--------+-------------+
 2 rows in set (0.00 sec)
+// UC8 - Extending employee_payroll data to store employee information like employee phone, address and department.
+
+// Adding phone_number as a column to the table
+mysql> alter table employee_payroll add phone_number varchar(200) after name;
+Query OK, 0 rows affected (3.77 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+// Adding address as a column to the table and set 'TBD' as a default value 
+mysql> alter table employee_payroll add address varchar(250) default 'TBD' after phone_number;
+Query OK, 0 rows affected (2.38 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+// Adding department as a column to the table and making it not null 
+mysql> alter table employee_payroll add department varchar(150) not null after address;
+Query OK, 0 rows affected (2.17 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+
+// Descibing the structure of the table
+mysql> desc employee_payroll;
++--------------+--------------+------+-----+---------+----------------+
+| Field        | Type         | Null | Key | Default | Extra          |
++--------------+--------------+------+-----+---------+----------------+
+| id           | int unsigned | NO   | PRI | NULL    | auto_increment |
+| name         | varchar(100) | NO   |     | NULL    |                |
+| phone_number | varchar(200) | YES  |     | NULL    |                |
+| address      | varchar(250) | YES  |     | TBD     |                |
+| department   | varchar(150) | NO   |     | NULL    |                |
+| gender       | char(1)      | YES  |     | NULL    |                |
+| salary       | double       | NO   |     | NULL    |                |
+| start        | date         | NO   |     | NULL    |                |
++--------------+--------------+------+-----+---------+----------------+
+8 rows in set (0.05 sec)
+
+// Retrieving all the entries of the table
+mysql>  select * from employee_payroll;
++----+---------+--------------+---------+------------+--------+---------+------------+
+| id | name    | phone_number | address | department | gender | salary  | start      |
++----+---------+--------------+---------+------------+--------+---------+------------+
+|  1 | Bill    | NULL         | TBD     |            | M      | 1000000 | 2018-01-03 |
+|  2 | Teressa | NULL         | TBD     |            | F      | 2000000 | 2019-11-13 |
+|  3 | Charlie | NULL         | TBD     |            | M      | 3000000 | 2020-05-21 |
++----+---------+--------------+---------+------------+--------+---------+------------+
+3 rows in set (0.00 sec)
