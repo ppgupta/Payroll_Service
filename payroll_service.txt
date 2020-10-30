@@ -295,3 +295,45 @@ mysql> select * from employee_payroll;
 3 rows in set (0.00 sec)
 
 // Retrieving all the entries from the table
+mysql> select * from employee_payroll;
++----+---------+--------------+---------+------------+--------+-----------+------------+-------------+-----+---------+------------+
+| id | name    | phone_number | address | department | gender | basic_pay | deductions | taxable_pay | tax | net_pay | start      |
++----+---------+--------------+---------+------------+--------+-----------+------------+-------------+-----+---------+------------+
+|  1 | Bill    | NULL         | TBD     |            | M      |   1000000 |          0 |           0 |   0 |       0 | 2018-01-03 |
+|  2 | Teressa | NULL         | TBD     |            | F      |   2000000 |          0 |           0 |   0 |       0 | 2019-11-13 |
+|  3 | Charlie | NULL         | TBD     |            | M      |   3000000 |          0 |           0 |   0 |       0 | 2020-05-21 |
++----+---------+--------------+---------+------------+--------+-----------+------------+-------------+-----+---------+------------+
+3 rows in set (0.00 sec)
+
+// UC10 - Making Teressa as part of Sales and Marketing Department.
+
+// Updating the department name of Teressa
+mysql> update employee_payroll set department = 'Sales' where name = 'Teressa';
+Query OK, 1 row affected (1.36 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+// Retrieving all the entries from the table
+mysql> select * from employee_payroll;
++----+---------+--------------+---------+------------+--------+-----------+------------+-------------+-----+---------+------------+
+| id | name    | phone_number | address | department | gender | basic_pay | deductions | taxable_pay | tax | net_pay | start      |
++----+---------+--------------+---------+------------+--------+-----------+------------+-------------+-----+---------+------------+
+|  1 | Bill    | NULL         | TBD     |            | M      |   1000000 |          0 |           0 |   0 |       0 | 2018-01-03 |
+|  2 | Teressa | NULL         | TBD     | Sales      | F      |   2000000 |          0 |           0 |   0 |       0 | 2019-11-13 |
+|  3 | Charlie | NULL         | TBD     |            | M      |   3000000 |          0 |           0 |   0 |       0 | 2020-05-21 |
++----+---------+--------------+---------+------------+--------+-----------+------------+-------------+-----+---------+------------+
+3 rows in set (0.03 sec)
+
+// Adding an entry of Teressa to the table
+mysql> insert into employee_payroll (name,basic_pay,start,department,deductions,taxable_pay,tax,net_pay)values
+    -> ('Teressa', 3000000.00, '2018-01-03','Marketing',1000000.00,2000000.00,500000.00,1500000.00);
+Query OK, 1 row affected (0.33 sec)
+
+// Retrieving all the entries of Teressa from the table
+mysql> select * from employee_payroll where name = 'Teressa';
++----+---------+--------------+---------+------------+--------+-----------+------------+-------------+--------+---------+------------+
+| id | name    | phone_number | address | department | gender | basic_pay | deductions | taxable_pay | tax    | net_pay | start      |
++----+---------+--------------+---------+------------+--------+-----------+------------+-------------+--------+---------+------------+
+|  2 | Teressa | NULL         | TBD     | Sales      | F      |   2000000 |          0 |           0 |      0 |       0 | 2019-11-13 |
+|  4 | Teressa | NULL         | TBD     | Marketing  | NULL   |   3000000 |    1000000 |     2000000 | 500000 | 1500000 | 2018-01-03 |
++----+---------+--------------+---------+------------+--------+-----------+------------+-------------+--------+---------+------------+
+2 rows in set (0.09 sec)
